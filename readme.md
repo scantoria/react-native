@@ -8,4 +8,9 @@ json-server -H 0.0.0.0 --watch db.json -p 3001 -d 2000
 
 // change directory to class nucamp NucampFolder
 cd Documents/DEVELOPMENT/nucamp/NucampFolder/4-React-Native/class/nucampsite/
+<<<<<<< HEAD
 git
+=======
+git
+
+>>>>>>> forms
