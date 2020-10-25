@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, FlatList, StyleSheet, Modal, Button } from 'react-native';
-import { Card, Icon } from 'react-native-elements';
+import { Card, Icon, Rating } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { postFavorite } from '../redux/ActionCreators';
@@ -82,7 +82,10 @@ class CampsiteInfo extends Component {
         super(props);
         this.state = {
             favorite: false,
-            showModal: false
+            showModal: false,
+            rating: 5,
+            author: '',
+            text: ''
         };
     }
 
@@ -96,6 +99,21 @@ class CampsiteInfo extends Component {
 
     toggleModal() {
         this.setState({showModal: !this.state.showModal});
+    }
+
+    handleComment(campsiteId){
+        console.log(JSON.stringify(campsiteId));
+        this.toggleModal();
+    }
+
+    resetForm() {
+        this.setState({
+            favorite: false,
+            showModal: false,
+            rating: 5,
+            author: '',
+            text: ''
+        });
     }
 
     render() {
@@ -127,7 +145,13 @@ class CampsiteInfo extends Component {
                                 title='Cancel'
                             />
                         </View>
-                        
+                        <Rating
+                            showRating
+                            startingValue={this.state.rating}
+                            imageSize={40}
+                            onFinishRating={rating => this.setState({rating: rating})}
+                            style={{paddingVertical: 10}}
+                        />
                         
                     </View>
                 </Modal>
