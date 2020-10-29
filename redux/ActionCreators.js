@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
+import { Text } from 'react-native';
 
 export const fetchComments = () => dispatch => {
     return fetch(baseUrl + 'comments')
@@ -48,6 +49,53 @@ export const fetchCampsites = () => dispatch => {
         .then(campsites => dispatch(addCampsites(campsites)))
         .catch(error => dispatch(campsitesFailed(error.message)));
 };
+
+export const addComment = (campsiteId, rating, author, text) => ({
+    type: ActionTypes.ADD_COMMENT,
+    payload: {
+        campsiteId: campsiteId,
+        rating: rating,
+        author: author,
+        text: text
+    }
+});
+
+export const postComment = (campsiteId, rating, author, text) => dispatch => {
+    const newComment = {
+        campsiteId: campsiteId,
+        rating: rating,
+        author: author,
+        text: text
+    };
+    newComment.date = new Date().toISOString();
+    setTimeout(() => {
+        dispatch(addFavorite(campsiteId));
+    }, 2000);
+    return fetch(baseUrl + 'comments', {
+        method: "POST",
+        body: JSON.stringify(newComment),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response;
+        } else {
+            const error = new Error(`Error ${response.status}: ${response.statusText}`);
+            error.response = response;
+            throw error;
+        }
+    },
+    error => {
+        const errMess = new Error(error.message);
+        throw errMess;
+    })
+    .then(response => response.json())
+    .then(promotions => dispatch(addPromotions(promotions)))
+    .catch(error => dispatch(promotionsFailed(error.message)));
+};
+
 export const campsitesLoading = () => ({
     type: ActionTypes.CAMPSITES_LOADING
 });

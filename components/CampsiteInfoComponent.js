@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, FlatList, StyleSheet, Modal, Button } from 'react-native';
-import { Card, Icon, Rating } from 'react-native-elements';
+import { Card, Icon, Input, Rating } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
-import { postFavorite } from '../redux/ActionCreators';
+import { postFavorite, addComment } from '../redux/ActionCreators';
+//import { Value } from 'react-native-reanimated';
 
 const mapStateToProps = state => {
     return{
@@ -14,7 +15,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    postFavorite: campsiteId => (postFavorite(campsiteId))
+    postFavorite: campsiteId => (postFavorite(campsiteId)),
+    addComment: (campsiteId, rating, author, text) => (addComment(campsiteId, rating, author, text))
 };
 
 function RenderCampsite(props) {
@@ -101,8 +103,10 @@ class CampsiteInfo extends Component {
         this.setState({showModal: !this.state.showModal});
     }
 
-    handleComment(campsiteId){
-        console.log(JSON.stringify(campsiteId));
+    handleComment({addComment}){
+        
+        console.log('Comments: ' + JSON.stringify(addComment));
+        alert('Comments: ' + JSON.stringify(addComment));
         this.toggleModal();
     }
 
@@ -136,15 +140,6 @@ class CampsiteInfo extends Component {
                     onRequestClose={() => this.toggleModal()}
                 >
                     <View style={styles.modal}>
-                        <View style={{margin: 10}}>
-                            <Button
-                                onPress={() => {
-                                    this.toggleModal();
-                                }}
-                                color='#808080'
-                                title='Cancel'
-                            />
-                        </View>
                         <Rating
                             showRating
                             startingValue={this.state.rating}
@@ -152,7 +147,41 @@ class CampsiteInfo extends Component {
                             onFinishRating={rating => this.setState({rating: rating})}
                             style={{paddingVertical: 10}}
                         />
-                        
+                        <Input
+                            placeholder='Author'
+                            leftIcon={{type: 'font-awesome', name: 'user-o'}}
+                            leftIconContainerStyle={{paddingRight: 10}}
+                            onChangeText={rating => this.setState({rating: rating})}
+                            value={author => this.setState({author: author})}
+                        />
+                        <Input
+                            placeholder='Comment'
+                            leftIcon={{type: 'font-awesome', name: 'comment-o'}}
+                            leftIconContainerStyle={{paddingRight: 10}}
+                            onChangeText={rating => this.setState({rating: rating})}
+                            value={text => this.setState({text: text})}
+                        />
+                        <View style={{margin: 10}}>
+                            <Button
+                                title='Submit'
+                                color='#5637DD'
+                                onPress={() => {
+                                    this.handleComment({addComment});
+                                    this.resetForm();
+                                }}
+                            />
+                        </View>
+                        <View style={{margin: 10}}>
+                            <Button
+                                onPress={() => {
+                                    this.toggleModal();
+                                    this.resetForm();
+                                }}
+                                color='#808080'
+                                title='Cancel'
+                            />
+                        </View>
+
                     </View>
                 </Modal>
             </ScrollView>
