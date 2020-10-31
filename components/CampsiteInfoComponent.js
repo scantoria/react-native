@@ -30,15 +30,15 @@ function RenderCampsite(props) {
             console.log('pan responder end', gestureState);
             if (recognizeDrag(gestureState)) {
                 Alert.alert(
-                    'Add Favorite',
-                    'Are you sure you wish to add ' + campsite.name + ' to favorites?',
-                    [
-                        {
+                    'Add Favorite', // alert title
+                    'Are you sure you wish to add ' + campsite.name + ' to favorites?', // alert body
+                    [ // button configuration
+                        { // first button
                             text: 'Cancel',
                             style: 'cancel',
                             onPress: () => console.log('Cancel Pressed')
                         },
-                        {
+                        { // second button
                             text: 'OK',
                             onPress: () => props.favorite ?
                                 console.log('Already set as a favorite') : props.markFavorite()
@@ -53,7 +53,12 @@ function RenderCampsite(props) {
 
     if (campsite) {
         return (
-            <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
+            <Animatable.View 
+                animation='fadeInDown' 
+                duration={2000} 
+                delay={1000}
+                //ref={view}
+                {...panResponder.panHandlers}>
                 <Card 
                     featuredTitle={campsite.name}
                     image={{uri: baseUrl + campsite.image}}>
